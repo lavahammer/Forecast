@@ -4,10 +4,17 @@ This project is designed for time series forecasting using various models. It al
 
 ## Table of Contents
 
+- [Images](#images)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
+
+## Images
+![img1](./images/Screenshot%202023-09-19%20131634.png)
+![img2](./images/Screenshot%202023-09-19%20131736.png)
+![img3](./images/Screenshot%202023-09-19%20131819.png)
+![img4](./images/Screenshot%202023-09-19%20131857.png)
 
 ## Getting Started
 
