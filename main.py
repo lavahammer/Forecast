@@ -13,6 +13,7 @@ from prophet.plot import plot_cross_validation_metric
 import csv
 from country_name import country_set, date, value
 
+
 # country_set = set()
 # date="datee"
 # value = "valuee"
@@ -82,6 +83,12 @@ if page == "Application":
     with st.expander("Date Format"):
         st.write("The data must contain date-time and value column")
     df_file = st.file_uploader("Upload a csv file", type=["csv"])
+    
+    with st.expander("Download sample data"):
+        sample_df = pd.read_csv("Forecast_data.csv")
+        download_sample_df = sample_df.to_csv(index=False)
+        st.download_button("Download",data=download_sample_df,file_name="sample_data.csv")
+
     df = pd.DataFrame
     # date = "datee"
     # value = "valuee"
@@ -170,7 +177,7 @@ if page == "Application":
                             color="#3cdfff",
                         )
 
-    st.markdown("## 2.Parameters Configration ⚙️")
+    st.markdown("## 2.Parameters Configuration ⚙️")
     with st.expander("Horizon"):
         prediction_period_param = st.number_input(
             "Enter the number of future periods(days) you want to predict", value=30
@@ -294,11 +301,6 @@ if page == "Application":
             df_p = performance_metrics(df_cv)
 
             metric = 1
-            # df_p = np.array(df_p['horizon'].dt.to_pydatetime())
-            # print(df_p.info())
-            # print(type(df_p))
-            # st.write(df_p)
-            # st.dataframe(df_p)
             chosen_metric = st.selectbox(
                 "Select metric to plot",
                 ["Choose a metric", "mse", "rmse", "mae", "mape", "coverage"],
@@ -319,8 +321,8 @@ if page == "Application":
         "seasonality_prior_scale": [0.01, 0.1, 1.0, 10.0],
     }
 
-    if flag:
-        if st.button("Optimize hyperparameters"):
+    if st.button("Optimize hyperparameters"):
+        if flag:
             with st.spinner("Optimizing"):
                 # Generate all combinations of parameters
                 all_params = [
@@ -353,22 +355,27 @@ if page == "Application":
                 st.write(
                     "You can repeat this process with different parameter configration in configration section"
                 )
+        else:
+            st.warning("Train model first")
 
     st.markdown("## 6.Results ✨")
     col1, col2, col3 = st.columns(3)
     with col1:
         if st.button('Export forecast (.csv)'):
             with st.spinner("Exporting.."):
-                export_forecast = pd.DataFrame(forecast[['ds','yhat_lower','yhat','yhat_upper']])
-                st.dataframe(export_forecast)
-                export_forecast= export_forecast.to_csv()
-                st.download_button("Download forecast csv",data=export_forecast,file_name="forecast.csv")
+                try:
+                    export_forecast = pd.DataFrame(forecast[['ds','yhat_lower','yhat','yhat_upper']])
+                    st.dataframe(export_forecast)
+                    export_forecast= export_forecast.to_csv()
+                    st.download_button("Download forecast csv",data=export_forecast,file_name="forecast.csv")
+                except:
+                    st.warning("Generate forecast first")
                 
     with col2:
         if st.button("Export model metrics"):
             with st.spinner("Exporting"):
                 try:
-                    st.dataframe(df_p)
+                    # st.dataframe(df_p)
                     export_metrics = df_p.to_csv()
                     st.download_button("Download metrics csv",data=export_metrics,file_name="metrics.csv")
                 except:
@@ -390,23 +397,18 @@ if page == "Application":
 
 
 else:
-    st.title("About Page")
-
-
-# growth: str = 'linear',
-#     changepoints: Any | None = None,
-#     n_changepoints: int = 25,
-#     changepoint_range: float = 0.8,
-#     yearly_seasonality: str = 'auto',
-#     weekly_seasonality: str = 'auto',
-#     daily_seasonality: str = 'auto',
-#     holidays: Any | None = None,
-#     seasonality_mode: str = 'additive',
-#     seasonality_prior_scale: float = 10,
-#     holidays_prior_scale: float = 10,
-#     changepoint_prior_scale: float = 0.05,
-#     mcmc_samples: int = 0,
-#     interval_width: float = 0.8,
-#     uncertainty_samples: int = 1000,
-#     stan_backend: Any | None = None
-# )
+    st.title("About")
+    st.markdown("""
+                - Upload any time series data.
+                - It will generate forecast and visualization
+                - You can configure multiple parameters 
+                - Can view and visualize metrics of predictions
+                - Hypertune parametes 
+                - Download forecast, model metrics and model json
+                """)
+    st.subheader("Connect:")
+    st.markdown("[Github](https://github.com/JatinSingh28)")
+    st.markdown("[LinikedIn](https://www.linkedin.com/in/jatinsingh28/)")
+    
+    
+    
